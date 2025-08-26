@@ -12,7 +12,8 @@ function App() {
   const [quotes, setQuotes] = useState([]);
   const [loading, setLoading] = useState(false);
   const [category, setCategory] = useState("All");
-  const [favoriteQuotes, setFavoriteQuotes] = useState([]);
+  const storedFaves = localStorage.getItem("favorite-quotes")
+  const [favoriteQuotes, setFavoriteQuotes] = useState(storedFaves ? JSON.parse(storedFaves) : []);
   const [messageText, setMessageText] = useState("");
   const [showMessage, setShowMessage] = useState(false);
 
@@ -41,6 +42,10 @@ function App() {
     fetchQuotes()
   }, [])
 
+  useEffect(() => {
+    localStorage.setItem("favorite-quotes", JSON.stringify(favoriteQuotes))
+  }, [favoriteQuotes])
+
   const filteredQuotes = category === "All" ? quotes : quotes.filter((quote) => 
     quote.categories.includes(category))
 
@@ -52,15 +57,16 @@ function App() {
     const selectedQuote = quotes.find((quote) => quote.id === quoteId)
     const alreadyFavorite = favoriteQuotes.find((favorite) => favorite.id === selectedQuote.id)
     if (alreadyFavorite) {
-      setMessageText("This quote is already in your favorites! Choose another.")
-      setShowMessage(true)
-    } else if (favoriteQuotes.length < maxFaves) {
-      setFavoriteQuotes([...favoriteQuotes, selectedQuote])
-      setMessageText("Added to favorites!")
-      setShowMessage(true)
+      removeFromFavorites(quoteId)
     } else {
-      setMessageText("Max number of Favorite Quotes reached. Please delete one to add another!")
-      setShowMessage(true)
+      if (favoriteQuotes.length < maxFaves) {
+        setFavoriteQuotes([...favoriteQuotes, selectedQuote])
+        setMessageText("Added to favorites!")
+        setShowMessage(true)
+      } else {
+        setMessageText("Max number of Favorite Quotes reached. Please delete one to add another!")
+        setShowMessage(true)
+      }
     }
   }
 

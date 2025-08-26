@@ -8,7 +8,7 @@ const Quotes = ({ quotes, categories, category, handleCategoryChange, addToFavor
             <div className="quotes wrapper">
                 <div className="category-header">
                     <h2>Pick your Favorite Quotes Below</h2>
-                    <p>Browse through your collection of quotes</p>
+                    {quotes.length > 0 && <p>You have a colection of {quotes.length} great {category === "All" ? "" : category} {quotes.length === 1 ? "quote!" : "quotes!"}</p>}
                     <CategoryForm categories={categories} category={category} handleCategoryChange={handleCategoryChange}/>
                 </div>
                 {quotes.map((quote) => (<QuoteCard key={quote.id} quote={quote} addToFavorites={addToFavorites} favoriteQuotes={favoriteQuotes}/>))}
