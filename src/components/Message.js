@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react"
+import { useEffect } from "react"
 
 const Message = ({messageText, removeMessage}) => {
     
@@ -8,7 +8,7 @@ const Message = ({messageText, removeMessage}) => {
             removeMessage(); 
         }, 1500);
         return () => clearTimeout(messageDisapear);
-    }, [])
+    }, [removeMessage])
 
     return (
         <div className="message">
